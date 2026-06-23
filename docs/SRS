@@ -19,7 +19,9 @@ Hence it becomes essential to maintain a database for synapse.
 
 1.2 Intended audience
 Database will be accessed by synapse committee members, administration, volunteers and IT staff.
-->  Suppose they want to arrange food, water or beverages  for a particular event, how much of these should they arrange? They can look for numbers of tickets sold for this particular event to get an idea of size of audience. Once they have the idea of size of audience, they can also arrange for seating arrangement.
+->  Suppose they want to arrange food, water or beverages  for a particular event, how much of these should they arrange? 
+They can look for numbers of tickets sold for this particular event to get an idea of size of audience.
+Once they have the idea of size of audience, they can also arrange for seating arrangement.
 -> Suppose an artist is running late for an event, committee members can find his contact details quickly from the database and contact him for updates.
 ->  IT staff: tasked with system deployment, trouble shooting and ongoing maintenance. They need operational  instructions, back up plans and support requirements.
 
@@ -41,12 +43,24 @@ Mobile native app.
 
 
 1.4 Description 
-Synapse is the flagship techno-cultural festival of DAU (Dhirubhai Ambani University), held annually in Gandhinagar, Gujarat. It spans four electrifying days, typically in February, and brings together a vibrant fusion of technology, culture, arts, and entertainment.
-Celebrating the intersection of creativity and innovation, Synapse features an extensive lineup—ranging from pro-nights with celebrated artists to competitions across music, dance, drama, fashion, literature, photography, eSports, coding, and more. Such diversity makes it one of Gujarat’s most prominent college fests.
-Highlights include staging major pro-nights featuring renowned performers such as Salim-Sulaiman, Amit Trivedi, Antara Mitra, and DJ acts like Teri Miko, each drawing huge crowds and setting the fest's energy high.
-The fest is designed to engage students, artists, technophiles, and cultural enthusiasts in an enriching mix of experiences—competitions like “Battle of Bands”, “Rampage” (fashion show), “Footloose” (contemporary dance), “Stage Play”, and “Cynosure” (main celebrity night); tech challenges like “Tech Hunt”, “Battledrome” (eSports), “Math-ify”; literary competitions such as “Shailee” (poetry & creative writing), “Anweshan” (research papers), “Samwaad” (parliamentary debate); creative zones like “CosCon” (cosplay), “Conceive” (photography), plus genre-spanning showcases in traditional dance, mime, street play (“Nukkad Natak”), and solo performances (“Mono Acte”).
-Beyond entertainment, Synapse is a student-owned endeavor that empowers hundreds of volunteers and committee members across multiple teams—event management, hospitality, PR, design, sponsorship, finance, and web—each coordinating tasks, publicity, sponsorship outreach, and infrastructure to bring the fest to life.
-The architecture of the fest is intentional: performances coexist with competitions, cultural expressions meet technological innovation, and student leadership combines with professional coordination—all under one dynamic roof. This complex orchestration needs a robust backend system to manage events, artists, ticketing, vendors, accommodation, schedules, sponsors, and reporting.
+Synapse is the flagship techno-cultural festival of DAU (Dhirubhai Ambani University), held annually in Gandhinagar, Gujarat. 
+It spans four electrifying days, typically in February, and brings together a vibrant fusion of technology, culture, arts, and entertainment.
+Celebrating the intersection of creativity and innovation, Synapse features an extensive lineup—ranging from pro-nights with 
+celebrated artists to competitions across music, dance, drama, fashion, literature, photography, eSports, coding, and more. 
+Such diversity makes it one of Gujarat’s most prominent college fests.
+Highlights include staging major pro-nights featuring renowned performers such as Salim-Sulaiman, Amit Trivedi, Antara Mitra,
+and DJ acts like Teri Miko, each drawing huge crowds and setting the fest's energy high.
+The fest is designed to engage students, artists, technophiles, and cultural enthusiasts in an enriching mix of experiences—competitions 
+like “Battle of Bands”, “Rampage” (fashion show), “Footloose” (contemporary dance), “Stage Play”, and “Cynosure” (main celebrity night);
+tech challenges like “Tech Hunt”, “Battledrome” (eSports), “Math-ify”; literary competitions such as “Shailee” (poetry & creative writing),
+“Anweshan” (research papers), “Samwaad” (parliamentary debate); creative zones like “CosCon” (cosplay), “Conceive” (photography),
+plus genre-spanning showcases in traditional dance, mime, street play (“Nukkad Natak”), and solo performances (“Mono Acte”).
+Beyond entertainment, Synapse is a student-owned endeavor that empowers hundreds of volunteers and committee members across multiple 
+teams—event management, hospitality, PR, design, sponsorship, finance, and web—each coordinating tasks, publicity, sponsorship outreach,
+and infrastructure to bring the fest to life.
+The architecture of the fest is intentional: performances coexist with competitions, cultural expressions meet technological innovation, 
+and student leadership combines with professional coordination—all under one dynamic roof.
+This complex orchestration needs a robust backend system to manage events, artists, ticketing, vendors, accommodation, schedules, sponsors, and reporting.
 REFERENCEs: elections.daiict.ac.inKnowafest
 KnowafestUnstopelections.daiict.ac.in
 KnowafestFacebookUnstop  
@@ -64,7 +78,7 @@ Synapse is the annual techno-cultural festival at DA-IICT, described as “a cel
 Organized fully by student committee teams handling: Event Management, Hospitality/Accommodation, Volunteers, Sponsorship, Public Relations, Design, and Web Design.
 
 
-Sponsorships majorly fund the fest—some budget is allocated to the  SBG.
+Sponsorships majorly fund the fest—some budget is allocated to the committees.
 
 
 
@@ -79,7 +93,8 @@ Date : 02/08/2025
 Place : cafeteria : Time : 16:00 : Duration: 05 minutes
 To gain an understanding of the responsibilities and work of a synapse committee member.
 interviewer(p1): how work is done as a committee?
-Synapse committee member(p2): different members are assigned different work in groups of varying size, some may be required to sell, advertise tickets, some go to different colleges for advertising synapse, some work on room allotments, etc. 
+Synapse committee member(p2): different members are assigned different work in groups of varying size, some may be required to sell, 
+advertise tickets, some go to different colleges for advertising synapse, some work on room allotments, etc. 
 p1: Do you face any challenges in it?
 P2 : sometimes it becomes difficult to find out who is responsible for which job.
 P1: any other challenges?
@@ -101,11 +116,14 @@ Place :Cafeteria : Time : 20:00  : Duration : 16 minutes
 Purpose : To gain an understanding of the responsibilities and work of a Synapse committee member.
 
 interviewer(p1): you have worked in synapse,what can you tell me about it.
-Synapse committee member(p2): there are many events which take place in synapse, i personally worked in conducting  the quizzing event. It was a theme based event with a harry-potter theme. The gifts for the winners were provided by sponsors. We had planned to conduct 2 levels of quizzes. If there were a draw between any groups we would have looked at the time taken by each group and decided the winner based on it. 
+Synapse committee member(p2): there are many events which take place in synapse, i personally worked in conducting  the quizzing event.
+It was a theme based event with a harry-potter theme. The gifts for the winners were provided by sponsors. We had planned to conduct 2 levels of quizzes. 
+If there were a draw between any groups we would have looked at the time taken by each group and decided the winner based on it. 
 There are many such events which take place in Synapse. 
 p1: Do you remember any challenges you faced in Synapse?
 P2 : some members are stationed on the gate for registering on-spot registrations. It becomes hectic as there are many people coming on event day.
 CONCLUSIONS:
-Different events must not be mixed, their information must be stored separately, on the spot registrations can’t be closed as maximum participation is encouraged, online registration must be encouraged as much as possible.
+Different events must not be mixed, their information must be stored separately, on the spot registrations can’t be closed as maximum participation is encouraged,
+online registration must be encouraged as much as possible.
 Also different sponsor’s data must be stored.
 
