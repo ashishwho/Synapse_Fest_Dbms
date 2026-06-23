@@ -1,0 +1,127 @@
+Trigger 1: ACCOMODATION AMOUNT DERIVATION
+-> while entering an accomodation record, writer need not worry about calculating amount,
+this trigger overwrites whatever amount was written by writer(maybe null).
+
+CREATE OR REPLACE FUNCTION calculate_accommodation_amount()
+RETURNS TRIGGER AS $$
+DECLARE
+    room_rate NUMERIC(12,2);
+    num_nights INT;
+BEGIN
+
+    SELECT rate_per_night
+    INTO room_rate
+    FROM hostel_room
+    WHERE room_id = NEW.room_id;
+
+    num_nights :=
+        NEW.check_out_date::date
+        - NEW.check_in_date_time::date;
+
+    IF num_nights <= 0 THEN
+        RAISE EXCEPTION
+        'Accommodation must be booked for at least one night';
+    END IF;
+
+    NEW.amount := room_rate * num_nights;
+
+    RETURN NEW;
+
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_calculate_accommodation_amount
+BEFORE INSERT OR UPDATE
+ON accommodation
+FOR EACH ROW
+EXECUTE FUNCTION calculate_accommodation_amount();
+
+
+
+Trigger 2: Room Availability / Date Overlap
+This trigger checks before entering a record in accommodation table.
+whatever accommodation record is trying to be entered for a specific room and
+check-in and check out date, is there atleast 1 vacancy in that room for that duration.
+
+CREATE OR REPLACE FUNCTION check_room_availability()
+RETURNS TRIGGER AS
+$$
+DECLARE
+    room_cap INT;
+    current_occupancy INT;
+BEGIN
+
+    SELECT capacity
+    INTO room_cap
+    FROM hostel_room
+    WHERE room_id = NEW.room_id;
+
+    SELECT COUNT(*)
+    INTO current_occupancy
+    FROM accommodation a
+    WHERE a.room_id = NEW.room_id
+      AND a.status = 'ACTIVE'
+
+      AND NEW.check_in_date_time < a.check_out_date
+      AND NEW.check_out_date > a.check_in_date_time;
+
+    IF TG_OP = 'UPDATE' THEN
+        current_occupancy := current_occupancy - 1;
+    END IF;
+
+    IF current_occupancy >= room_cap THEN
+        RAISE EXCEPTION
+        'Room % is full for selected dates',
+        NEW.room_id;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+DROP TRIGGER IF EXISTS trg_check_room_availability
+ON accommodation;
+
+CREATE TRIGGER trg_check_room_availability
+BEFORE INSERT OR UPDATE
+ON accommodation
+FOR EACH ROW
+EXECUTE FUNCTION check_room_availability();
+
+
+
+Trigger 3: Venue Schedule Conflict
+This trigger checks before entering a data in event table, 
+if selected venue is available during that date and duration.
+
+CREATE OR REPLACE FUNCTION check_venue_schedule()
+RETURNS TRIGGER AS $$
+BEGIN
+
+    IF EXISTS (
+        SELECT 1
+        FROM event e
+        WHERE e.venue_id = NEW.venue_id
+          AND e.date = NEW.date
+          AND e.event_id <> COALESCE(NEW.event_id,-1)
+
+          AND NEW.start_time < e.end_time
+          AND NEW.end_time > e.start_time
+    )
+    THEN
+        RAISE EXCEPTION
+        'Venue already occupied during selected time slot';
+    END IF;
+
+    RETURN NEW;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_check_venue_schedule
+BEFORE INSERT OR UPDATE
+ON event
+FOR EACH ROW
+EXECUTE FUNCTION check_venue_schedule();
