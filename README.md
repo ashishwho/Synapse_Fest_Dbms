@@ -31,4 +31,5 @@ A PostgreSQL-based database system designed for managing a college techno-cultur
 ## Authors
 
 Ashish Kumar
+##
 Email: 202403002@dau.ac.in
