@@ -1,0 +1,122 @@
+SQL QUERIES:
+
+1:
+English query: Display all ticket types along with the number of tickets sold for each, ordered from highest to lowest.
+SQL:
+SELECT
+    tt.ticket_type_name,
+    COUNT(*) AS tickets_sold
+FROM ticket t
+JOIN ticket_type tt
+    ON t.ticket_type_id = tt.ticket_type_id
+GROUP BY tt.ticket_type_id, tt.ticket_type_name
+ORDER BY tickets_sold DESC;
+
+
+
+2:
+English query:Display all events along with the committee responsible for managing them.
+SQL:
+SELECT
+    e.event_name,
+    c.comm_name
+FROM event e
+JOIN committee c
+    ON e.comm_id = c.comm_id
+ORDER BY c.comm_name;
+
+
+
+3:
+English query:Display the details of attendees who have booked accommodation, along with their room numbers.
+SQL:
+SELECT
+    a.attendee_id,
+    a.first_name,
+    a.last_name,
+    ac.room_id,
+    ac.check_in_date_time,
+    ac.check_out_date
+FROM attendee a
+JOIN accommodation ac
+    ON a.attendee_id = ac.attendee_id
+ORDER BY ac.room_id;
+
+
+
+4:
+English query: Calculate the total funds available to each committee. Funds consist of approved budget allocations, approved sponsorship contributions, and ticket revenue. Ticket revenue is distributed equally among all committees whose events are covered by the purchased ticket type.
+SQL:
+WITH
+budget_money AS (
+    SELECT comm_id, amount
+    FROM budget
+    WHERE status = 'APPROVED'
+),
+
+sponsor_money AS (
+    SELECT
+        comm_id,
+        SUM(amount) AS sponsor_amount
+    FROM committee_sponsor
+    WHERE status = 'APPROVED'
+    GROUP BY comm_id
+),
+
+ticket_committees AS (
+    SELECT DISTINCT
+        t.ticket_id,
+        tt.price,
+        e.comm_id
+    FROM ticket t
+    JOIN ticket_type tt
+        ON t.ticket_type_id = tt.ticket_type_id
+    JOIN ticket_type_event tte
+        ON tt.ticket_type_id = tte.ticket_type_id
+    JOIN event e
+        ON e.event_id = tte.event_id
+),
+
+committee_count AS (
+    SELECT
+        ticket_id,
+        COUNT(*) AS num_committees
+    FROM ticket_committees
+    GROUP BY ticket_id
+),
+
+ticket_money AS (
+    SELECT
+        tc.comm_id,
+        SUM(tc.price / cc.num_committees) AS ticket_amount
+    FROM ticket_committees tc
+    JOIN committee_count cc
+        ON tc.ticket_id = cc.ticket_id
+    GROUP BY tc.comm_id
+)
+
+SELECT
+    c.comm_id,
+    c.comm_name,
+
+    COALESCE(b.amount,0) AS budget_money,
+    COALESCE(s.sponsor_amount,0) AS sponsor_money,
+    COALESCE(t.ticket_amount,0) AS ticket_money,
+
+    COALESCE(b.amount,0)
+    + COALESCE(s.sponsor_amount,0)
+    + COALESCE(t.ticket_amount,0)
+    AS total_money
+
+FROM committee c
+
+LEFT JOIN budget_money b
+    ON c.comm_id = b.comm_id
+
+LEFT JOIN sponsor_money s
+    ON c.comm_id = s.comm_id
+
+LEFT JOIN ticket_money t
+    ON c.comm_id = t.comm_id
+
+ORDER BY total_money DESC;
