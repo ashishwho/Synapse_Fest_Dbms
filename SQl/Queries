@@ -28,7 +28,7 @@ ORDER BY c.comm_name;
 
 
 3:
-English query:Display the details of attendees who have booked accommodation, along with their room numbers.
+English query: Display the details of attendees who have booked accommodation, along with their room numbers.
 SQL:
 SELECT
     a.attendee_id,
@@ -43,10 +43,45 @@ JOIN accommodation ac
 ORDER BY ac.room_id;
 
 
-
 4:
+English query: Display each event along with its venue, venue capacity, and the 
+total number of attendees eligible to attend that event based on purchased tickets.
+
+SQL:
+SELECT
+    e.event_id,
+    e.event_name,
+    v.venue_name,
+    v.capacity,
+    COUNT(DISTINCT t.attendee_id) AS attendee_count
+FROM event e
+
+JOIN venue v
+    ON e.venue_id = v.venue_id
+
+LEFT JOIN ticket_type_event tte
+    ON e.event_id = tte.event_id
+
+LEFT JOIN ticket tk
+    ON tte.ticket_type_id = tk.ticket_type_id
+
+LEFT JOIN attendee t
+    ON tk.attendee_id = t.attendee_id
+
+GROUP BY
+    e.event_id,
+    e.event_name,
+    v.venue_name,
+    v.capacity
+
+ORDER BY e.event_id;
+
+
+
+5:
 English query: Calculate the total funds available to each committee. Funds consist of approved budget allocations, approved sponsorship contributions, and ticket revenue. Ticket revenue is distributed equally among all committees whose events are covered by the purchased ticket type.
 SQL:
+
 WITH
 budget_money AS (
     SELECT comm_id, amount
