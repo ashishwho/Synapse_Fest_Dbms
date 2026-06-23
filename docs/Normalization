@@ -1,0 +1,345 @@
+TABLES (before normalization):
+
+EVENT(event_id,event_name,category,rules,prize_money,date,start_time,end_time,cost_event,venue_id,comm_id)
+
+JUDGES(judge_id,first_name,middle_name,last_name,email,fee,genre)
+
+JUDGES_PHONE(judge_id,phone)
+
+EVENT_JUDGES(event_id,judge_id)
+
+ARTIST(artist_id,first_name,middle_name,last_name,email,fee,genre)
+
+ARTIST_PHONE(artist_id,phone)
+
+EVENT_ARTIST(event_id,artist_id)
+
+VENUE(venue_id,venue_name,capacity,location)
+
+VENUE_FACILITY(venue_id,facility)      
+
+COMMITTEE(comm_id,comm_name,email)
+
+COMMITTEE_PHONE(comm_id,phone)
+
+TICKET_TYPE(ticket_type_id,ticket_type_name,price)
+
+TICKET_TYPE_EVENT(ticket_type_id,event_id)
+
+TICKET(ticket_id,purchase_time,status,attendee_id,ticket_type_id)
+
+ATTENDEE(attendee_id,first_name,middle_name,last_name,gender,category,email,dob) //student,prof,etc
+
+ATTENDEE_PHONE(attendee_id,phone)
+
+ACCOMMODATION(attendee_id,room_id,check_in_date_time,check_out_date,number_of_guests,amout,status)
+
+HOSTEL_ROOM(room_id,hostel_name,capacity,status,rate_per_night)
+
+VENDOR(vendor_id,venue_id,stall_name,first_name,middle_name,last_name,email,service_type,rent_per_day)
+
+VENDOR_PHONE(vendor_id,phone)
+
+LOST_FOUND(item_id,query(lost/found),description,status,venue_id)
+
+LOST_FOUND_PHONE(item_id,phone)
+
+BUDGET(budget_id,comm_id,amount,status)
+
+SPONSOR(sponsor_id,sponsor_name,email)
+
+COMMITTEE_SPONSOR(comm_id,sponsor_id,amount,status)
+
+SPONSOR_PHONE(sponsor_id,phone)
+
+COMMITTEE_MEMBER(member_id,first_name,middle_name,last_name,email,position,year_experience)
+
+COMMITTEE_MEMBER_PHONE(member_id,phone)
+
+COMMITTEE_COMMITTEE_MEMBER(comm_id,member_id)
+
+VOLUNTEER(volunteer_id,first_name,middle_name,last_name,email)
+
+VOLUNTEER_PHONE(volunteer_id,phone)
+
+COMMITTEE_VOLUNTEER(comm_id,volunteer_id)
+
+FEEDBACK(feedback_id,feedback,reviewer_type,rating(out of 5),date)
+
+
+
+
+FUNCTIONAL DEPENDENCIES:
+
+EVENT
+event_id→event_name,category,rules,prize_money,date,start_time,end_time,cost_event,venue_id,comm_id 
+
+JUDGES
+judge_id→first_name,middle_name,last_name,email,fee,genre
+
+JUDGES_PHONE
+(judge_id,phone)->all attributes
+
+EVENT_JUDGES
+(event_id,judge_id)→all attributes
+
+
+ARTIST
+artist_id→first_name,middle_name,last_name,email,fee,genre
+
+ARTIST_PHONE
+(artist_id,phone)→all attributes
+
+EVENT_ARTIST
+(event_id,artist_id)→all attributes
+
+VENUE
+venue_id→venue_name,capacity,location
+
+VENUE_FACILITY
+(venue_id,facility)→all attributes
+
+COMMITTEE
+comm_id→comm_name,email
+
+COMMITTEE_PHONE
+(comm_id,phone)→all attributes
+
+TICKET_TYPE
+ticket_type_id→ticket_type_name,price
+
+TICKET_TYPE_EVENT
+(ticket_type_id,event_id)→all attributes
+
+TICKET
+ticket_id→purchase_time,status,attendee_id,ticket_type_id 
+
+ATTENDEE
+attendee_id→first_name,middle_name,last_name,gender,category,email
+
+ATTENDEE_PHONE
+(attendee_id,phone)→all attributes
+
+ACCOMODATION
+(attendee_id,room_id,check_in_date_time)→check_out_date,number_of_guests,amount,status
+
+HOSTEL_ROOM
+room_id→hostel_name,capacity,status,rate_per_night
+
+VENDOR
+vendor_id→venue_id,stall_name,first_name,middle_name,last_name,email,service_type,rent_per_day 
+
+VENDOR_PHONE
+(vendor_id,phone)→all attributes
+
+LOST_FOUND
+item_id→query,description,status,venue_id
+
+LOST_FOUND_PHONE
+(item_id,phone)→all attributes
+
+BUDGET
+budget_id→comm_id,amount,status
+
+SPONSOR
+sponsor_id→sponsor_name,email
+
+COMMITTEE_SPONSOR
+(comm_id,sponsor_id)→amount,status
+
+SPONSOR_PHONE
+(sponsor_id,phone)→all attributes
+
+COMMITTEE_MEMBER
+member_id→first_name,middle_name,last_name,email,position,year_experience 
+
+COMMITTEE_MEMBER_PHONE
+(member_id,phone)→all attributes
+
+COMMITTEE_COMMITTEE_MEMBER
+(comm_id,member_id)→all attributes
+
+VOLUNTEER
+volunteer_id→first_name,middle_name,last_name,email 
+
+VOLUNTEER_PHONE
+(volunteer_id,phone)→all attributes
+
+COMMITTEE_VOLUNTEER
+(comm_id,volunteer_id)→all attributes
+
+FEEDBACK
+feedback_id→feedback,person_type,rating,date
+
+
+
+NORMALIZATION:
+
+1NF:
+All attributes are single valued.
+So all tables are already in 1 NF.
+
+
+2NF:
+
+Relations having single-attribute primary keys are automatically in 2NF.
+
+Examples:
+EVENT
+VENUE
+COMMITTEE
+ATTENDEE
+TICKET
+HOSTEL_ROOM
+SPONSOR
+BUDGET
+VOLUNTEER
+COMMITTEE_MEMBER
+
+because all non-key attributes depend entirely on their primary key.
+
+
+We now analyze relations with composite keys.
+
+1. COMMITTEE_SPONSOR
+Relation:
+COMMITTEE_SPONSOR(
+comm_id,
+sponsor_id,
+amount,
+status
+)
+Primary Key:
+(comm_id, sponsor_id)
+FD:
+(comm_id,sponsor_id)→amount,status
+Neither:
+comm_id→amount
+nor
+Sponsor_id→amount
+
+Similarly for status.
+Therefore:
+no partial dependency exists
+relation is in 2NF
+
+2. ACCOMMODATION
+Relation:
+ACCOMMODATION(
+attendee_id,
+room_id,
+check_in_date_time,
+check_out_date,
+number_of_guests,
+amount,
+status
+)
+Primary Key:
+(attendee_id, room_id, check_in_date_time)
+FD:
+(attendee_id,room_id,check_in_date_time)→check_out_date,number_of_guests,amount,status
+
+No attribute depends only on:
+attendee_id
+Room_id
+check_in_date_time
+or partial subset
+Hence:
+no partial dependency
+relation is in 2NF
+
+3. EVENT_ARTIST
+Initial relation:
+EVENT_ARTIST(event_id, artist_id)
+PK: (event_id,artist_id)
+FD: (event_id,artist_id)->  (event_id,artist_id)
+Cannot determine artist_id just from event_id and vice versa
+Hence already in 2NF.
+
+4. EVENT_JUDGES
+Initial relation:
+EVENT_JUDGES(event_id, judge_id)
+
+Just like event_artist.
+Also already in 2NF.
+
+Conclusion for 2NF
+All relations satisfy 2NF because no non-prime attribute depends on only part of a composite key
+
+
+
+
+3NF and BCNF:
+
+ISSUE 1 — ARTIST relation
+FD:
+artist_id→fee
+Problem:
+Artist fee is not intrinsic to artist.
+The fee depends on which event artist performs in
+Thus:
+(event_id,artist_id)→fee is the correct dependency.
+Decomposition
+Final Relations
+ARTIST(artist_id,first_name,middle_name,last_name,email,genre)
+and
+EVENT_ARTIST(event_id,artist_id,fee)
+
+Justification
+This removes semantic redundancy and update anomalies.
+Example problem before normalization:
+If same artist performs in 2 events with different fees:
+Artist A → ₹50,000 in event 1
+Artist A → ₹1,00,000 in event 3
+Single fee attribute becomes inconsistent.
+Thus decomposition improves consistency.
+
+ISSUE 2 — JUDGES relation
+Same issue as of artist table.
+Decomposition
+Final Relations
+JUDGES(judge_id,first_name,middle_name,last_name,email,genre)
+and
+EVENT_JUDGES(event_id,judge_id,fee)
+Justification
+This avoids inconsistent judge fees across events
+
+ISSUE 3 — VENUE_FACILITIEs
+I want some fix values for facilities so i will create a new table facility
+facility(facility_id,facility_name)
+And venue facility becomes(venue_id,facility_id)
+
+Other Relations
+Remaining relations already satisfy 3NF because:
+all non-key attributes depend only on candidate key
+no transitive dependency exists
+
+BCNF rule: For every non-trivial FD X → Y, X must be a superkey.
+
+Relations are also in BCNF because:
+  -> for any table with attribute email, email is declared unique, so it a candidate key
+      email->remaining attributes
+
+EVENT
+FDs:
+event_id -> all attributes
+
+event_name -> all attributes
+because event_name is UNIQUE.
+Both determinants are candidate keys.
+BCNF satisfied.
+
+EVENT_JUDGES
+FD:
+(event_id, judge_id) -> fee
+Composite PK determines fee.
+BCNF satisfied.
+EVENT_ARTIST
+Similar to EVENT_JUDGES.
+ACCOMMODATION
+Current FD:
+(attendee_id, room_id, check_in_date_time)
+   -> check_out_date, amount, status
+Primary key is determinant.
+So formally:
+BCNF satisfied.
