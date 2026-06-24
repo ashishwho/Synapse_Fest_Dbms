@@ -1,1 +1,72 @@
+# ER Diagram to Relational Schema Transformation
+
+The Synapse Fest Database was initially modeled using an Entity-Relationship (ER) diagram representing 
+the major entities, attributes, and relationships involved in managing a college festival. 
+The ER diagram was then transformed into a relational schema by applying standard ER-to-Relational mapping rules.
+
+The objective was to convert conceptual entities and relationships into relations that can be implemented in PostgreSQL 
+while preserving data integrity and minimizing redundancy.
+
+### Mapping Rules
+
+1. Every strong entity was converted into a relation with its primary key.
+
+2. Multivalued attributes such as phone numbers were separated into independent relations.
+
+3. One-to-Many (1:N) relationships were implemented using foreign keys on the many side.
+
+4. Many-to-Many (M:N) relationships were converted into associative relations containing the primary keys of participating entities.
+
+5. Derived attributes were not stored and were computed whenever required.
+
+6. Integrity constraints were later enforced through primary keys, foreign keys, CHECK constraints, and triggers.
+
+##Several entities contained multivalued phone numbers in the ER model. To maintain First Normal Form (1NF), separate relations were created.
+
+Examples:
+
+COMMITTEE_PHONE(comm_id, phone)
+
+ATTENDEE_PHONE(attendee_id, phone)
+
+ARTIST_PHONE(artist_id, phone)
+
+JUDGES_PHONE(judge_id, phone)
+
+VOLUNTEER_PHONE(volunteer_id, phone)
+
+SPONSOR_PHONE(sponsor_id, phone)
+
+VENDOR_PHONE(vendor_id, phone)
+
+Each relation uses a composite primary key consisting of the owner identifier and phone number.
+
+## Relationship Mapping
+
+One-to-Many Relationships
+
+| Relationship                              | Implementation        |
+| ----------------------------------------- | --------------------- |
+| Committee manages Event                   | EVENT.comm_id         |
+| Venue hosts Event                         | EVENT.venue_id        |
+| Venue contains Vendor                     | VENDOR.venue_id       |
+| Venue associated with Lost & Found report | LOST_FOUND.venue_id   |
+| Attendee purchases Ticket                 | TICKET.attendee_id    |
+| Ticket belongs to Ticket Type             | TICKET.ticket_type_id |
+
+
+Many-to-Many Relationships
+
+| Relationship                 | Relation                   |
+| ---------------------------- | -------------------------- |
+| Event – Judge                | EVENT_JUDGES               |
+| Event – Artist               | EVENT_ARTIST               |
+| Ticket Type – Event          | TICKET_TYPE_EVENT          |
+| Committee – Sponsor          | COMMITTEE_SPONSOR          |
+| Committee – Volunteer        | COMMITTEE_VOLUNTEER        |
+| Committee – Committee Member | COMMITTEE_COMMITTEE_MEMBER |
+| Venue – Facility             | VENUE_FACILITY             |
+
+
+
 
