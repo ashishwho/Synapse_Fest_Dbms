@@ -70,3 +70,72 @@ Many-to-Many Relationships
 
 
 
+TABLES (from erd-relational mapping, not yet normalized):
+
+EVENT(event_id,event_name,category,rules,prize_money,date,start_time,end_time,cost_event,venue_id,comm_id)
+
+JUDGES(judge_id,first_name,middle_name,last_name,email,fee,genre)
+
+JUDGES_PHONE(judge_id,phone)
+
+EVENT_JUDGES(event_id,judge_id)
+
+ARTIST(artist_id,first_name,middle_name,last_name,email,fee,genre)
+
+ARTIST_PHONE(artist_id,phone)
+
+EVENT_ARTIST(event_id,artist_id)
+
+VENUE(venue_id,venue_name,capacity,location)
+
+VENUE_FACILITY(venue_id,facility)      
+
+COMMITTEE(comm_id,comm_name,email)
+
+COMMITTEE_PHONE(comm_id,phone)
+
+TICKET_TYPE(ticket_type_id,ticket_type_name,price)
+
+TICKET_TYPE_EVENT(ticket_type_id,event_id)
+
+TICKET(ticket_id,purchase_time,status,attendee_id,ticket_type_id)
+
+ATTENDEE(attendee_id,first_name,middle_name,last_name,gender,category,email,dob) //student,prof,etc
+
+ATTENDEE_PHONE(attendee_id,phone)
+
+ACCOMMODATION(attendee_id,room_id,check_in_date_time,check_out_date,number_of_guests,amout,status)
+
+HOSTEL_ROOM(room_id,hostel_name,capacity,status,rate_per_night)
+
+VENDOR(vendor_id,venue_id,stall_name,first_name,middle_name,last_name,email,service_type,rent_per_day)
+
+VENDOR_PHONE(vendor_id,phone)
+
+LOST_FOUND(item_id,query(lost/found),description,status,venue_id)
+
+LOST_FOUND_PHONE(item_id,phone)
+
+BUDGET(budget_id,comm_id,amount,status)
+
+SPONSOR(sponsor_id,sponsor_name,email)
+
+COMMITTEE_SPONSOR(comm_id,sponsor_id,amount,status)
+
+SPONSOR_PHONE(sponsor_id,phone)
+
+COMMITTEE_MEMBER(member_id,first_name,middle_name,last_name,email,position,year_experience)
+
+COMMITTEE_MEMBER_PHONE(member_id,phone)
+
+COMMITTEE_COMMITTEE_MEMBER(comm_id,member_id)
+
+VOLUNTEER(volunteer_id,first_name,middle_name,last_name,email)
+
+VOLUNTEER_PHONE(volunteer_id,phone)
+
+COMMITTEE_VOLUNTEER(comm_id,volunteer_id)
+
+FEEDBACK(feedback_id,feedback,reviewer_type,rating(out of 5),date)
+
+
