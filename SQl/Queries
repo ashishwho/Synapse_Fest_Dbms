@@ -43,11 +43,12 @@ JOIN accommodation ac
 ORDER BY ac.room_id;
 
 
-4:
-English query: Display each event along with its venue, venue capacity, and the 
-total number of attendees eligible to attend that event based on purchased tickets.
 
-SQL:
+
+
+*4:
+English query:Display each event along with its venue, venue capacity, and the total number of attendees eligible to attend that event based on purchased tickets.
+Sql:
 SELECT
     e.event_id,
     e.event_name,
@@ -75,13 +76,12 @@ GROUP BY
     v.capacity
 
 ORDER BY e.event_id;
+ 
 
 
-
-5:
+*5:
 English query: Calculate the total funds available to each committee. Funds consist of approved budget allocations, approved sponsorship contributions, and ticket revenue. Ticket revenue is distributed equally among all committees whose events are covered by the purchased ticket type.
 SQL:
-
 WITH
 budget_money AS (
     SELECT comm_id, amount
@@ -155,3 +155,145 @@ LEFT JOIN ticket_money t
     ON c.comm_id = t.comm_id
 
 ORDER BY total_money DESC;
+
+
+*6:
+English Query: Give list of all venues having wifi and washroom facilities
+SQL query:
+SELECT
+    v.venue_id,
+    v.venue_name,
+    v.location
+FROM venue v
+JOIN venue_facility vf
+    ON v.venue_id = vf.venue_id
+JOIN facility f
+    ON vf.facility_id = f.facility_id
+WHERE f.facility_name IN ('WIFI', 'WASHROOM')
+GROUP BY
+    v.venue_id,
+    v.venue_name,
+    v.location
+HAVING COUNT(DISTINCT f.facility_name) = 2;
+
+
+
+7:
+English Query: Give list of all vendors who provide food services
+SQL query:
+SELECT
+    vendor_id,
+    stall_name,
+    first_name,
+    last_name,
+    email,
+    rent_per_day
+FROM vendor
+WHERE service_type = 'FOOD';
+
+
+
+*8:
+English query: Display every artist along with the total amount earned across all events.
+SQL query: 
+SELECT
+    a.artist_id,
+    a.first_name,
+    a.last_name,
+    COALESCE(SUM(ea.fee),0) AS total_earnings
+FROM artist a
+LEFT JOIN event_artist ea
+    ON a.artist_id = ea.artist_id
+GROUP BY
+    a.artist_id,
+    a.first_name,
+    a.last_name
+ORDER BY total_earnings DESC;
+
+
+
+
+9:
+English query: Find the most popular ticket types.
+SQL query:
+SELECT
+    tt.ticket_type_name,
+    COUNT(t.ticket_id) AS tickets_sold
+FROM ticket_type tt
+LEFT JOIN ticket t
+    ON tt.ticket_type_id = t.ticket_type_id
+GROUP BY
+    tt.ticket_type_name
+ORDER BY tickets_sold DESC;
+
+
+
+*10:
+English query
+Display the gender demographics for every event, showing the percentage of Male, Female, and Other attendees based on purchased tickets.
+SQL query:
+SELECT
+    e.event_id,
+    e.event_name,
+
+    ROUND(
+        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'MALE' THEN a.attendee_id END)
+        / COUNT(DISTINCT a.attendee_id), 2
+    ) AS male_percentage,
+
+    ROUND(
+        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'FEMALE' THEN a.attendee_id END)
+        / COUNT(DISTINCT a.attendee_id), 2
+    ) AS female_percentage,
+
+    ROUND(
+        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'OTHER' THEN a.attendee_id END)
+        / COUNT(DISTINCT a.attendee_id), 2
+    ) AS other_percentage
+
+FROM event e
+
+JOIN ticket_type_event tte
+    ON e.event_id = tte.event_id
+
+JOIN ticket t
+    ON tte.ticket_type_id = t.ticket_type_id
+
+JOIN attendee a
+    ON t.attendee_id = a.attendee_id
+
+GROUP BY
+    e.event_id,
+    e.event_name
+
+ORDER BY
+    e.event_id;
+
+
+
+
+11:
+English query
+Display each committee along with the total number of committee members and volunteers associated with it.
+SQL
+SELECT
+    c.comm_id,
+    c.comm_name,
+
+    (
+        SELECT COUNT(*)
+        FROM committee_committee_member ccm
+        WHERE ccm.comm_id = c.comm_id
+    ) AS committee_members,
+
+    (
+        SELECT COUNT(*)
+        FROM committee_volunteer cv
+        WHERE cv.comm_id = c.comm_id
+    ) AS volunteers
+
+FROM committee c
+ORDER BY c.comm_id;
+
+
+
