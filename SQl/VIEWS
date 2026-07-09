@@ -1,1 +1,31 @@
+1. View to see acommodations details: attendee_id, attendee name, room number, hostel name,check_in_date,check_out_date and amount
+
+create view accommodation_details as
+select a.attendee_id,at.first_name,at.last_name,h.room_id,h.hostel_name,a.check_in_date_time,a.check_out_date,a.amount
+from accommodation a
+join attendee at on a.attendee_id=at.attendee_id
+join hostel_room h on a.room_id=h.room_id
+
+
+2. View to see ticket details: ticket_id, ticket_type_id, ticket_type_name, attendee_id, attendee_name
+
+create view ticket_details as
+select t.ticket_id,tt.ticket_type_id,tt.ticket_type_name,a.attendee_id,a.first_name,a.last_name
+from ticket t
+join ticket_type tt on
+t.ticket_type_id=tt.ticket_type_id
+join attendee a on
+t.attendee_id=a.attendee_id
+
+
+3. View to see event details: event_id, event_name, venue_id, venue_name, committee_id, committee_name
+
+create view event_details as
+select e.event_id,e.event_name,v.venue_id,v.venue_name,c.comm_id,c.comm_name
+from event e
+join venue v on
+e.venue_id=v.venue_id
+join committee c on
+e.comm_id=c.comm_id
+
 
