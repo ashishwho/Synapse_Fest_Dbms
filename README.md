@@ -17,8 +17,8 @@ A PostgreSQL-based database system designed for managing a college techno-cultur
 
 ## Repository Structure
 
-* `ER_Diagram/` – ER Diagram and schema design
-* `SQL/` – DDL, triggers, sample data, and SQL queries
+* `ER_Diagram/` – ER Diagram 
+* `SQL/` – DDL, triggers, views and SQL queries
 * `docs/` – SRS, normalization, and project documentation
 
 ## Sample Queries
