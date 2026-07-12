@@ -3,14 +3,13 @@ SQL QUERIES:
 1:
 English query: Display all ticket types along with the number of tickets sold for each, ordered from highest to lowest.
 SQL:
-SELECT
-    tt.ticket_type_name,
-    COUNT(*) AS tickets_sold
-FROM ticket t
-JOIN ticket_type tt
-    ON t.ticket_type_id = tt.ticket_type_id
-GROUP BY tt.ticket_type_id, tt.ticket_type_name
-ORDER BY tickets_sold DESC;
+select tt.ticket_type_name,count(*) as tickets_sold
+from ticket_type tt
+join ticket t on
+tt.ticket_type_id=t.ticket_type_id
+group by tt.ticket_type_name
+order by tickets_sold desc
+
 
 
 
