@@ -7,6 +7,8 @@ join attendee at on a.attendee_id=at.attendee_id
 join hostel_room h on a.room_id=h.room_id
 
 
+
+
 2. View to see ticket details: ticket_id, ticket_type_id, ticket_type_name, attendee_id, attendee_name
 
 create view ticket_details as
@@ -18,6 +20,8 @@ join attendee a on
 t.attendee_id=a.attendee_id
 
 
+
+
 3. View to see event details: event_id, event_name, venue_id, venue_name, committee_id, committee_name
 
 create view event_details as
@@ -27,5 +31,91 @@ join venue v on
 e.venue_id=v.venue_id
 join committee c on
 e.comm_id=c.comm_id
+
+
+
+
+4.  View to get total funds available to each committee. Funds consist of approved budget allocations, approved sponsorship contributions, and ticket revenue.
+Ticket revenue is distributed equally among all committees whose events are covered by the purchased ticket type.
+
+SQL:
+
+
+CREATE OR REPLACE VIEW committee_funds AS
+
+WITH
+
+budget_money AS (
+    SELECT
+        comm_id,
+        amount
+    FROM budget
+    WHERE status = 'APPROVED'
+),
+
+sponsor_money AS (
+    SELECT
+        comm_id,
+        SUM(amount) AS sponsor_amount
+    FROM committee_sponsor
+    WHERE status = 'APPROVED'
+    GROUP BY comm_id
+),
+
+ticket_committees AS (
+    SELECT DISTINCT
+        t.ticket_id,
+        tt.price,
+        e.comm_id
+    FROM ticket t
+    JOIN ticket_type tt
+        ON t.ticket_type_id = tt.ticket_type_id
+    JOIN ticket_type_event tte
+        ON tt.ticket_type_id = tte.ticket_type_id
+    JOIN event e
+        ON tte.event_id = e.event_id
+),
+
+committee_count AS (
+    SELECT
+        ticket_id,
+        COUNT(*) AS num_committees
+    FROM ticket_committees
+    GROUP BY ticket_id
+),
+
+ticket_money AS (
+    SELECT
+        tc.comm_id,
+        SUM(tc.price / cc.num_committees) AS ticket_amount
+    FROM ticket_committees tc
+    JOIN committee_count cc
+        ON tc.ticket_id = cc.ticket_id
+    GROUP BY tc.comm_id
+)
+
+SELECT
+    c.comm_id,
+    c.comm_name,
+
+    COALESCE(b.amount, 0) AS budget_money,
+    COALESCE(s.sponsor_amount, 0) AS sponsor_money,
+    COALESCE(t.ticket_amount, 0) AS ticket_money,
+
+    COALESCE(b.amount, 0)
+    + COALESCE(s.sponsor_amount, 0)
+    + COALESCE(t.ticket_amount, 0)
+    AS total_funds
+
+FROM committee c
+
+LEFT JOIN budget_money b
+    ON c.comm_id = b.comm_id
+
+LEFT JOIN sponsor_money s
+    ON c.comm_id = s.comm_id
+
+LEFT JOIN ticket_money t
+    ON c.comm_id = t.comm_id;
 
 
