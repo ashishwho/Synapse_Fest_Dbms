@@ -78,82 +78,63 @@ ORDER BY e.event_id;
  
 
 
-*5:
+*5.1:
 English query: Calculate the total funds available to each committee. Funds consist of approved budget allocations, approved sponsorship contributions, and ticket revenue. Ticket revenue is distributed equally among all committees whose events are covered by the purchased ticket type.
 SQL:
-WITH
-budget_money AS (
-    SELECT comm_id, amount
-    FROM budget
-    WHERE status = 'APPROVED'
-),
 
-sponsor_money AS (
-    SELECT
-        comm_id,
-        SUM(amount) AS sponsor_amount
-    FROM committee_sponsor
-    WHERE status = 'APPROVED'
-    GROUP BY comm_id
-),
+SELECT *
+FROM committee_funds;
 
-ticket_committees AS (
-    SELECT DISTINCT
-        t.ticket_id,
-        tt.price,
-        e.comm_id
-    FROM ticket t
-    JOIN ticket_type tt
-        ON t.ticket_type_id = tt.ticket_type_id
-    JOIN ticket_type_event tte
-        ON tt.ticket_type_id = tte.ticket_type_id
-    JOIN event e
-        ON e.event_id = tte.event_id
-),
 
-committee_count AS (
-    SELECT
-        ticket_id,
-        COUNT(*) AS num_committees
-    FROM ticket_committees
-    GROUP BY ticket_id
-),
 
-ticket_money AS (
-    SELECT
-        tc.comm_id,
-        SUM(tc.price / cc.num_committees) AS ticket_amount
-    FROM ticket_committees tc
-    JOIN committee_count cc
-        ON tc.ticket_id = cc.ticket_id
-    GROUP BY tc.comm_id
-)
+*5.2:
+English Query: For every event tell whether it is possible to conduct that event or not. An event is possible to conduct if
+its cost is not more than total funds available to its committee.
+SQL Query:
 
 SELECT
-    c.comm_id,
-    c.comm_name,
+    e.event_name,
+    cf.comm_name,
+    e.cost_event,
+    cf.total_funds,
 
-    COALESCE(b.amount,0) AS budget_money,
-    COALESCE(s.sponsor_amount,0) AS sponsor_money,
-    COALESCE(t.ticket_amount,0) AS ticket_money,
+    CASE
+        WHEN cf.total_funds >= e.cost_event
+        THEN 'FEASIBLE'
+        ELSE 'NOT FEASIBLE'
+    END AS feasibility
 
-    COALESCE(b.amount,0)
-    + COALESCE(s.sponsor_amount,0)
-    + COALESCE(t.ticket_amount,0)
-    AS total_money
+FROM event e
+JOIN committee_funds cf
+    ON e.comm_id = cf.comm_id;
 
-FROM committee c
 
-LEFT JOIN budget_money b
-    ON c.comm_id = b.comm_id
 
-LEFT JOIN sponsor_money s
-    ON c.comm_id = s.comm_id
+*5.3:
+English Query: For every Committee, tell whether it has  enough funds to conduct all its events.
+SQL query:
 
-LEFT JOIN ticket_money t
-    ON c.comm_id = t.comm_id
+SELECT
+    cf.comm_name,
+    cf.total_funds,
+    SUM(e.cost_event) AS total_event_cost,
 
-ORDER BY total_money DESC;
+    CASE
+        WHEN cf.total_funds >= SUM(e.cost_event)
+        THEN 'FEASIBLE'
+        ELSE 'NOT FEASIBLE'
+    END AS can_conduct_all_events
+
+FROM committee_funds cf
+JOIN event e
+    ON cf.comm_id = e.comm_id
+
+GROUP BY
+    cf.comm_id,
+    cf.comm_name,
+    Cf.total_funds;
+
+
 
 
 *6:
