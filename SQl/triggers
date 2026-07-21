@@ -60,14 +60,9 @@ BEGIN
     INTO current_occupancy
     FROM accommodation a
     WHERE a.room_id = NEW.room_id
-      AND a.status = 'ACTIVE'
 
       AND NEW.check_in_date_time < a.check_out_date
       AND NEW.check_out_date > a.check_in_date_time;
-
-    IF TG_OP = 'UPDATE' THEN
-        current_occupancy := current_occupancy - 1;
-    END IF;
 
     IF current_occupancy >= room_cap THEN
         RAISE EXCEPTION
