@@ -473,14 +473,6 @@ CREATE TABLE accommodation (
     amount NUMERIC(12,2) NOT NULL
         CHECK (amount >= 0),
 
-    status VARCHAR(20) NOT NULL
-        CHECK (
-            status IN (
-                'ACTIVE',
-                'COMPLETED'
-            )
-        ),
-
     PRIMARY KEY (
         attendee_id,
         room_id,
