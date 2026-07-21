@@ -211,8 +211,9 @@ CREATE TABLE event (
 
     rules TEXT,
 
-    prize_money NUMERIC(12,2) NOT NULL
-        CHECK (prize_money >= 0),
+    prize_money NUMERIC(12,2)
+    DEFAULT 0
+    CHECK (prize_money >= 0),
 
     date DATE NOT NULL,
 
