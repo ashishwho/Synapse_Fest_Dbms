@@ -470,7 +470,7 @@ CREATE TABLE accommodation (
 
     check_out_date TIMESTAMP NOT NULL,
 
-    amount NUMERIC(12,2) NOT NULL
+    amount NUMERIC(12,2) 
         CHECK (amount >= 0),
 
     PRIMARY KEY (
