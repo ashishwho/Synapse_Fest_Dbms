@@ -217,42 +217,35 @@ English query
 Display the gender demographics for every event, showing the percentage of Male, Female, and Other
 attendees based on purchased tickets.
 SQL query:
-SELECT
-    e.event_id,
-    e.event_name,
+select e.event_id,e.event_name,
+ round(
+  100.0*count(distinct case when a.gender='MALE' then a.attendee_id end)/
+  count(distinct a.attendee_id),2
 
-    ROUND(
-        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'MALE' THEN a.attendee_id END)
-        / COUNT(DISTINCT a.attendee_id), 2
-    ) AS male_percentage,
+ ) as MALE_PERCENTAGE,
 
-    ROUND(
-        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'FEMALE' THEN a.attendee_id END)
-        / COUNT(DISTINCT a.attendee_id), 2
-    ) AS female_percentage,
+ round(
+  100.0*count(distinct case when a.gender='FEMALE' then a.attendee_id end)/
+  count(distinct a.attendee_id),2
 
-    ROUND(
-        100.0 * COUNT(DISTINCT CASE WHEN a.gender = 'OTHER' THEN a.attendee_id END)
-        / COUNT(DISTINCT a.attendee_id), 2
-    ) AS other_percentage
+ ) as FEMALE_PERCENTAGE,
 
-FROM event e
+ round(
+ 100.0*count(distinct case when a.gender='OTHER' then a.attendee_id end)/
+ count(distinct a.attendee_id),2
 
-JOIN ticket_type_event tte
-    ON e.event_id = tte.event_id
+ )as OTHERS_PERCENTAGE
+ from event e
+ left join ticket_type_event tte on
+ e.event_id=tte.event_id
+ left join ticket t on
+ tte.ticket_type_id=t.ticket_type_id
+ left join attendee a on
+ t.attendee_id=a.attendee_id
 
-JOIN ticket t
-    ON tte.ticket_type_id = t.ticket_type_id
-
-JOIN attendee a
-    ON t.attendee_id = a.attendee_id
-
-GROUP BY
-    e.event_id,
-    e.event_name
-
-ORDER BY
-    e.event_id;
+ group by e.event_id,e.event_name
+ order by e.event_id
+ 
 
 
 
@@ -261,24 +254,19 @@ ORDER BY
 English query
 Display each committee along with the total number of committee members and volunteers associated with it.
 SQL
-SELECT
-    c.comm_id,
-    c.comm_name,
 
-    (
-        SELECT COUNT(*)
-        FROM committee_committee_member ccm
-        WHERE ccm.comm_id = c.comm_id
-    ) AS committee_members,
+select c.comm_id,c.comm_name,count( distinct v.volunteer_id) as volunteers,count(distinct cm.member_id) as committee_members
 
-    (
-        SELECT COUNT(*)
-        FROM committee_volunteer cv
-        WHERE cv.comm_id = c.comm_id
-    ) AS volunteers
+from committee c
 
-FROM committee c
-ORDER BY c.comm_id;
+left join committee_committee_member cm on
+c.comm_id=cm.comm_id
+left join committee_volunteer v on
+c.comm_id=v.comm_id
+
+group by c.comm_id,c.comm_name
+order by c.comm_id
+
 
 
 
