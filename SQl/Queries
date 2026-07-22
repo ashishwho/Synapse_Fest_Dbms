@@ -55,7 +55,7 @@ SELECT
     e.event_name,
     v.venue_name,
     v.capacity,
-    COUNT(DISTINCT t.attendee_id) AS attendee_count
+    COUNT(tk.ticket_id) AS attendee_count
 FROM event e
 
 JOIN venue v
@@ -67,8 +67,6 @@ LEFT JOIN ticket_type_event tte
 LEFT JOIN ticket tk
     ON tte.ticket_type_id = tk.ticket_type_id
 
-LEFT JOIN attendee t
-    ON tk.attendee_id = t.attendee_id
 
 GROUP BY
     e.event_id,
@@ -76,7 +74,9 @@ GROUP BY
     v.venue_name,
     v.capacity
 
-ORDER BY e.event_id;
+	order by attendee_count
+	desc
+
  
 
 
