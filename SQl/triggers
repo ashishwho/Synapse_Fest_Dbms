@@ -99,7 +99,6 @@ BEGIN
         FROM event e
         WHERE e.venue_id = NEW.venue_id
           AND e.date = NEW.date
-          AND e.event_id <> COALESCE(NEW.event_id,-1)
 
           AND NEW.start_time < e.end_time
           AND NEW.end_time > e.start_time
